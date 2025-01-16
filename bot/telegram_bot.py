@@ -58,7 +58,12 @@ async def start(update: Update, context):
 
 # Load messages from a JSON file
 def load_messages():
-    with open('messages.json', 'r') as file:
+    # Get the absolute path of the current directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # Construct the full path to messages.json
+    messages_path = os.path.join(current_dir, 'messages.json')
+
+    with open(messages_path, 'r') as file:
         return json.load(file)
 
 # Send a random message to all saved chat IDs
