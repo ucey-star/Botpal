@@ -98,7 +98,7 @@ if __name__ == "__main__":
     scheduler = BackgroundScheduler(timezone=pacific)
 
     # Add a job to the scheduler for 9:50 AM Pacific Time
-    scheduler.add_job(lambda: schedule_async(send_message), 'cron', hour=10, minute=0)
+    scheduler.add_job(lambda: schedule_async(send_message), 'cron', hour=15, minute=14)
 
     # Listener for debugging scheduler errors
     def job_listener(event):
