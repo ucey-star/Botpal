@@ -35,11 +35,11 @@ async def start(update: Update, context):
         chat_ids.append(chat_id)
         save_chat_ids(chat_ids)
         await update.message.reply_text(
-           await update.message.reply_text(
             "🎉 Happy Birthday! 🎂 I was created by Uche, especially for you, as a birthday gift. My purpose is to send you motivational messages that remind you of your incredible strength, inspire your journey, and help you face insecurities with courage and confidence. Together, we’ll embrace every challenge, celebrate every triumph, and make this year your best one yet. 🌟"
-        ))
+        )
     else:
         await update.message.reply_text("Stay tuned for more messages. 😊")
+
 
 # Load messages from a JSON file
 def load_messages():
