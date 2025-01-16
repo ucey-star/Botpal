@@ -2,10 +2,22 @@ import os
 import json
 import random
 import asyncio
+from flask import Flask
+import threading
 from dotenv import load_dotenv
 from telegram import Bot, Update
 from telegram.ext import ApplicationBuilder, CommandHandler
 from apscheduler.schedulers.background import BackgroundScheduler
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Bot is running!"
+
+def run_dummy_server():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 # Load environment variables
 load_dotenv()
@@ -64,6 +76,7 @@ async def send_message():
 
 if __name__ == "__main__":
     # Initialize the Telegram bot application
+    bot.delete_webhook(drop_pending_updates=True)
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
     # Register the /start command
