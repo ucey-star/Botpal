@@ -50,7 +50,7 @@ async def start(update: Update, context):
         chat_ids.append(chat_id)
         save_chat_ids(chat_ids)
         await update.message.reply_text(
-            "🎉 Happy Birthday! 🎂 I was created by Uche, especially for you, as a birthday gift. My purpose is to send you motivational messages that remind you of your incredible strength, inspire your journey, and help you face insecurities with courage and confidence. Together, we’ll embrace every challenge, celebrate every triumph, and make this year your best one yet. 🌟"
+            "🎉 Happy Birthday! 🎂 I was engineered by Uche as a special birthday gift just for you. My mission is to send you uplifting messages that celebrate your strength, inspire your journey, and help you face insecurities with courage and grace. Together, we’ll tackle challenges, celebrate victories, and make this year truly unforgettable. 🌟 Remember, our bodies change with the seasons—embrace and love yourself through every phase of life. 💖"
         )
     else:
         await update.message.reply_text("Stay tuned for more messages. 😊")
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     scheduler = BackgroundScheduler(timezone=pacific)
 
     # Add a job to the scheduler for 9:50 AM Pacific Time
-    scheduler.add_job(lambda: schedule_async(send_message), 'cron', hour=15, minute=14)
+    scheduler.add_job(lambda: schedule_async(send_message), 'cron', hour=9, minute=0)
 
     # Listener for debugging scheduler errors
     def job_listener(event):
