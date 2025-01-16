@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from telegram import Bot, Update
 from telegram.ext import ApplicationBuilder, CommandHandler
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.events import EVENT_JOB_ERROR
 
 app = Flask(__name__)
 pacific = timezone('US/Pacific')
@@ -75,6 +76,9 @@ async def send_message():
         except Exception as e:
             print(f"Failed to send message to {chat_id}: {e}")
 
+# Function to schedule asynchronous jobs properly
+def schedule_async(func):
+    asyncio.run(func())
 
 if __name__ == "__main__":
     # Initialize the Telegram bot application
@@ -87,9 +91,17 @@ if __name__ == "__main__":
 
     # Initialize the scheduler
     scheduler = BackgroundScheduler(timezone=pacific)
-    scheduler.add_job(lambda: asyncio.run(send_message()), 'cron', hour=9, minute=50)  # Sends a message daily at 9 AM
+
+    # Add a job to the scheduler for 9:50 AM Pacific Time
+    scheduler.add_job(lambda: schedule_async(send_message), 'cron', hour=10, minute=0)
+
+    # Listener for debugging scheduler errors
+    def job_listener(event):
+        if event.exception:
+            print(f"Job failed: {event.job_id} - {event.exception}")
+    scheduler.add_listener(job_listener, EVENT_JOB_ERROR)
+
     scheduler.start()
 
     print("Bot is running...")
     application.run_polling()
-    
