@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     # Initialize the scheduler
     scheduler = BackgroundScheduler(timezone=pacific)
-    scheduler.add_job(lambda: asyncio.run(send_message()), 'cron', hour=9, minute=45)  # Sends a message daily at 9 AM
+    scheduler.add_job(lambda: asyncio.run(send_message()), 'cron', hour=9, minute=50)  # Sends a message daily at 9 AM
     scheduler.start()
 
     print("Bot is running...")
