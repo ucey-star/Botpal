@@ -4,12 +4,14 @@ import random
 import asyncio
 from flask import Flask
 import threading
+from pytz import timezone
 from dotenv import load_dotenv
 from telegram import Bot, Update
 from telegram.ext import ApplicationBuilder, CommandHandler
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
+pacific = timezone('US/Pacific')
 
 @app.route("/")
 def home():
@@ -84,8 +86,8 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("start", start))
 
     # Initialize the scheduler
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(lambda: asyncio.run(send_message()), 'cron', hour=9, minute=0)  # Sends a message daily at 9 AM
+    scheduler = BackgroundScheduler(timezone=pacific)
+    scheduler.add_job(lambda: asyncio.run(send_message()), 'cron', hour=9, minute=45)  # Sends a message daily at 9 AM
     scheduler.start()
 
     print("Bot is running...")
