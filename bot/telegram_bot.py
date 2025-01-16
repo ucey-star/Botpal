@@ -76,6 +76,7 @@ async def send_message():
 
 if __name__ == "__main__":
     # Initialize the Telegram bot application
+    threading.Thread(target=run_dummy_server, daemon=True).start()
     bot.delete_webhook(drop_pending_updates=True)
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
