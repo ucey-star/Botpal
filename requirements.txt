@@ -3,3 +3,5 @@ apscheduler==3.9.1.post1
 python-dotenv==1.0.0
 flask
 pytz
+requests
+time
