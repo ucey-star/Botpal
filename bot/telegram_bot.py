@@ -4,6 +4,8 @@ import random
 import asyncio
 from flask import Flask
 import threading
+import requests
+import time
 from pytz import timezone
 from dotenv import load_dotenv
 from telegram import Bot, Update
@@ -21,6 +23,15 @@ def home():
 def run_dummy_server():
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
+
+def self_ping():
+    while True:
+        try:
+            requests.get("https://botpal.onrender.com")
+            print("Pinged successfully!")
+        except Exception as e:
+            print(f"Failed to ping: {e}")
+        time.sleep(900)  # Ping every 15 minutes
 
 # Load environment variables
 load_dotenv()
@@ -88,6 +99,7 @@ def schedule_async(func):
 if __name__ == "__main__":
     # Initialize the Telegram bot application
     threading.Thread(target=run_dummy_server, daemon=True).start()
+    threading.Thread(target=self_ping, daemon=True).start()
     bot.delete_webhook(drop_pending_updates=True)
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
