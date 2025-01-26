@@ -36,7 +36,7 @@ def self_ping():
     while True:
         try:
             # Replace with your actual Render URL:
-            requests.get("https://your-service.onrender.com")
+            requests.get("https://botpal.onrender.com")
             print("Pinged successfully!")
         except Exception as e:
             print("Failed to ping:", e)
@@ -82,9 +82,9 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Stay tuned for more messages. 😊")
 
 ################################################################################
-# 6. The repeating message-sending task (runs every 2 minutes)
+# 6. Daily message-sending task (runs at 9:00 AM PST)
 ################################################################################
-async def send_repeating_message(context: ContextTypes.DEFAULT_TYPE):
+async def send_daily_message(context: ContextTypes.DEFAULT_TYPE):
     chat_ids = load_chat_ids()
     messages = load_messages()
     message = random.choice(messages)['message']
@@ -97,26 +97,26 @@ async def send_repeating_message(context: ContextTypes.DEFAULT_TYPE):
             print(f"Failed to send message to {chat_id}: {e}")
 
 ################################################################################
-# 7. Main: Build the application, schedule the repeating job, start threads, etc.
+# 7. Main: Build the application, schedule the daily job, start threads, etc.
 ################################################################################
 if __name__ == "__main__":
     load_dotenv()
     TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
+    # Build the telegram bot application
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
     # Register /start
     application.add_handler(CommandHandler("start", start_command))
 
-    # Schedule the job to run every 2 minutes
-    # interval=120 seconds = 2 minutes
-    # first=10 means the first run happens 10s after the bot starts
-    application.job_queue.run_repeating(
-        send_repeating_message, interval=120, first=10
-    )
+    # Schedule the job to run daily at 9:00 AM Pacific Time
+    pacific_tz = timezone("US/Pacific")
+    target_time = datetime.time(hour=9, minute=0, tzinfo=pacific_tz)
+    application.job_queue.run_daily(send_daily_message, time=target_time)
 
     # Start the Flask app in one thread
     threading.Thread(target=run_flask_app, daemon=True).start()
+
     # Start the self-ping function in another thread
     threading.Thread(target=self_ping, daemon=True).start()
 
