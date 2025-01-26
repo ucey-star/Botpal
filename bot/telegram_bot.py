@@ -116,8 +116,8 @@ if __name__ == "__main__":
 
     # Start the Flask app in one thread
     threading.Thread(target=run_flask_app, daemon=True).start()
-    # Start the self-ping function in another thread
-    threading.Thread(target=self_ping, daemon=True).start()
+    # # Start the self-ping function in another thread
+    # threading.Thread(target=self_ping, daemon=True).start()
 
     print("Bot is running... Press Ctrl+C to stop.")
     application.run_polling()
