@@ -30,18 +30,17 @@ def run_flask_app():
     app.run(host="0.0.0.0", port=port)
 
 ################################################################################
-# 2. Self-ping function (to keep Render free tier alive, if possible)
+# 2. Self-ping function (to keep the Render free tier alive, if possible)
 ################################################################################
 def self_ping():
     while True:
         try:
             # Replace with your actual Render URL:
-            requests.get("https://botpal.onrender.com")
+            requests.get("https://your-service.onrender.com")
             print("Pinged successfully!")
         except Exception as e:
             print("Failed to ping:", e)
-        # Sleep 15 minutes before the next ping
-        time.sleep(900)
+        time.sleep(900)  # Ping every 15 minutes
 
 ################################################################################
 # 3. Utility functions for chat IDs
@@ -77,15 +76,15 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_ids.append(chat_id)
         save_chat_ids(chat_ids)
         await update.message.reply_text(
-            "🎉 Happy Birthday! 🎂 I was engineered by Uche as a special birthday gift just for you. My mission is to send you uplifting messages that celebrate your strength, inspire your journey, and help you face insecurities with courage and grace. Together, we’ll tackle challenges, celebrate victories, and make this year truly unforgettable. 🌟 Remember, our bodies change with the seasons—embrace and love yourself through every phase of life. 💖"
+            "🎉 Happy Birthday! 🎂 I was engineered by Uche as a special birthday gift..."
         )
     else:
         await update.message.reply_text("Stay tuned for more messages. 😊")
 
 ################################################################################
-# 6. The message-sending task (runs daily at 9:00 AM PST)
+# 6. The repeating message-sending task (runs every 2 minutes)
 ################################################################################
-async def send_daily_message(context: ContextTypes.DEFAULT_TYPE):
+async def send_repeating_message(context: ContextTypes.DEFAULT_TYPE):
     chat_ids = load_chat_ids()
     messages = load_messages()
     message = random.choice(messages)['message']
@@ -98,7 +97,7 @@ async def send_daily_message(context: ContextTypes.DEFAULT_TYPE):
             print(f"Failed to send message to {chat_id}: {e}")
 
 ################################################################################
-# 7. Main: Build the application, schedule the daily job, start threads, etc.
+# 7. Main: Build the application, schedule the repeating job, start threads, etc.
 ################################################################################
 if __name__ == "__main__":
     load_dotenv()
@@ -109,15 +108,17 @@ if __name__ == "__main__":
     # Register /start
     application.add_handler(CommandHandler("start", start_command))
 
-    # Schedule the job to run every day at 9:00 AM Pacific Time
-    pacific_tz = timezone("US/Pacific")
-    target_time = datetime.time(hour=9, minute=0, tzinfo=pacific_tz)
-    application.job_queue.run_daily(send_daily_message, time=target_time)
+    # Schedule the job to run every 2 minutes
+    # interval=120 seconds = 2 minutes
+    # first=10 means the first run happens 10s after the bot starts
+    application.job_queue.run_repeating(
+        send_repeating_message, interval=120, first=10
+    )
 
     # Start the Flask app in one thread
     threading.Thread(target=run_flask_app, daemon=True).start()
-    # # Start the self-ping function in another thread
-    # threading.Thread(target=self_ping, daemon=True).start()
+    # Start the self-ping function in another thread
+    threading.Thread(target=self_ping, daemon=True).start()
 
     print("Bot is running... Press Ctrl+C to stop.")
     application.run_polling()
