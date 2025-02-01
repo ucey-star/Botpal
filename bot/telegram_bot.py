@@ -76,7 +76,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_ids.append(chat_id)
         save_chat_ids(chat_ids)
         await update.message.reply_text(
-            "🎉 Happy Birthday! 🎂 I was engineered by Uche as a special birthday gift..."
+            "🎉 Happy Birthday! 🎂 I was engineered by Uche as a special birthday gift just for you. My mission is to send you uplifting messages that celebrate your strength, inspire your journey, and help you face insecurities with courage and grace. Together, we’ll tackle challenges, celebrate victories, and make this year truly unforgettable. 🌟 Remember, our bodies change with the seasons—embrace and love yourself through every phase of life. 💖 Be kind to your mind, and don’t waste time overthinking. Celebrate yourself as much as you celebrate others—you are just as worthy of pride and appreciation. ✨"
         )
     else:
         await update.message.reply_text("Stay tuned for more messages. 😊")
